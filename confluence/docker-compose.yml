@@ -1,0 +1,32 @@
+version: '2.1'
+services:
+    confluence:
+        image: atlassian/confluence-server:5.9
+        restart: always
+        container_name: confluence
+        # environment:
+        ports:
+            - "8090:8090"
+            - "8091:8091"
+        volumes:
+            - /home/avatar/confluence/confluence-data:/var/atlassian/application-data/confluence
+        links:
+            - postgresql
+
+    postgresql:
+        image: postgres:10.4
+        restart: always
+        container_name: confluence-postgres
+        environment:
+            POSTGRES_DB: confluence  # 필수
+            POSTGRES_USER: avatar
+            POSTGRES_PASSWORD: 1592
+            POSTGRES_INITDB_ARGS: --encoding=UTF-8
+            # PGDATA: /var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    postgres_data:
